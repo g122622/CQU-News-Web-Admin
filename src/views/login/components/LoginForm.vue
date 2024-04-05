@@ -40,14 +40,14 @@ import { HOME_URL } from "@/config";
 import { getTimeState } from "@/utils";
 import { Login } from "@/api/interface";
 import { ElNotification } from "element-plus";
-// import { loginApi } from "@/api/modules/login";
+import { loginApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { CircleClose, UserFilled } from "@element-plus/icons-vue";
 import type { ElForm } from "element-plus";
-// import md5 from "md5";
+import md5 from "md5";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -75,20 +75,9 @@ const login = (formEl: FormInstance | undefined) => {
         loading.value = true;
         try {
             // 1.执行登录接口
-            // const { data } = await loginApi({ ...loginForm, password: md5(loginForm.password) });
-            const data = {
-                sid: "1234567",
-                id: 123,
-                username: "string",
-                avatar: "string",
-                phone: "string",
-                email: "string",
-                qq: "string",
-                role: 1,
-                state: 1
-            };
-            userStore.setUserInfo(data);
-            userStore.setToken(data.sid);
+            const { data } = await loginApi({ ...loginForm, password: md5(loginForm.password) });
+
+            userStore.setToken(data.data.token);
 
             // 2.添加动态路由
             await initDynamicRouter();
@@ -101,7 +90,7 @@ const login = (formEl: FormInstance | undefined) => {
             router.push(HOME_URL);
             ElNotification({
                 title: getTimeState(),
-                message: "欢迎登录" + data.username,
+                message: "欢迎登录",
                 type: "success",
                 duration: 3000
             });
