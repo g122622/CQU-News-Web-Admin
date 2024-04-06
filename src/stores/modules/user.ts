@@ -16,7 +16,7 @@ export const noneUserInfo = {
 };
 
 export const useUserStore = defineStore({
-    id: "",
+    id: "cqunews-user",
     state: (): UserState => ({
         token: "",
         userInfo: noneUserInfo
